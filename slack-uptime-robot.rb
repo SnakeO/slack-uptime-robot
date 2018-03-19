@@ -11,12 +11,12 @@ require 'twilio-ruby'
 class SlackUptimeRobot
 
 	def initialize
-		@twilio_sid = 'TWILIO_SID'
-		@twilio_auth_token = 'TWILIO_AUTH_TOKEN'
-		@twilio_from_phone = '+15125557890'			# the FROM phone number you purchased from twilio
+		@twilio_sid = ENV['TWILIO_SID']
+		@twilio_auth_token = ENV['TWILIO_AUTH_TOKEN']
+		@twilio_from_phone = ENV['TWILIO_PHONE_NUMBER']			# the FROM phone number you purchased from twilio
 
-		@notify_phone = '+15125551234'				# the phone which will receive the SMS
-		@slack_token = 'SLACK_TOKEN'					# create your bot at https://my.slack.com/services/new/bot
+		@notify_phone = ENV['TO_PHONE_NUMBER']				# the phone which will receive the SMS
+		@slack_token = ENV['SLACK_TOKEN']					# create your bot at https://my.slack.com/services/new/bot
 
 		setupTwilio()
 		setupSlack()
@@ -43,6 +43,7 @@ class SlackUptimeRobot
 
 		client.on :hello do
 			puts "Successfully connected, welcome '#{client.self.name}' to the '#{client.team.name}' team at https://#{client.team.domain}.slack.com."
+			File.write('/app/health', 'up')
 		end
 
 		client.on :message do |data|
@@ -61,10 +62,12 @@ class SlackUptimeRobot
 
 		client.on :close do |_data|
 			puts "Client is about to disconnect"
+			File.write('/app/health', 'down')
 		end
 
 		client.on :closed do |_data|
 			puts "Client has disconnected successfully!"
+			File.write('/app/health', 'down')
 		end
 
 		client.start!
