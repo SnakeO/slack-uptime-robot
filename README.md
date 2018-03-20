@@ -11,7 +11,22 @@ You need:
   * An [Uptime Robot](uptimerobot.com) account setup.
   * A [Slack](https://slack.com/) account and channel setup.
 
+Usage (Docker)
+------------------------------------
 
+Just use the following environment variable to configure your bot :
+
+`TWILIO_SID`: Your Twilio SID
+
+`TWILIO_AUTH_TOKEN`: Your Twilio authentication token
+
+`TWILIO_PHONE_NUMBER`: The "from" phone number
+
+`TO_PHONE_NUMBER`: The destination phone number
+
+`SLACK_TOKEN`: The token of your bot
+
+If needed, the health of the process can be check using the simple `healthcheck.sh` script, if the return value is different than `0`, the watcher is not up and need to be restarted.
 
 Installation (Debian/Ubuntu)
 ------------------------------------
